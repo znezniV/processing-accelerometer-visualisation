@@ -32,36 +32,42 @@ void draw(){
   strokeWeight(1);
   point(width/2,height/2);
 
- if (thirdValue > zHigh){
+  if (thirdValue > zHigh){
    zHigh = thirdValue;
- }
+  }
 
- if (frameCount%10==0){
+  if (frameCount%10==0){
    thirdValuePrint = thirdValue;
- }
+  }
 
- // scroll effekt
- loadPixels(); // Prepare the pixels array
- for(int i = 0; i < pixels.length; i ++) { // Loop through all of the pixels, position 0 is the top left corner going right and then down
+  // scroll effekt
+  loadPixels(); // Prepare the pixels array
+  for(int i = 0; i < pixels.length; i ++) { // Loop through all of the pixels, position 0 is the top left corner going right and then down
    if(i % width != 0 && i < pixels.length - 1) pixels[i] = pixels[i + 1]; // Assign each pixel to be the pixel to its right...
    else pixels[i] = color(#FFFFFF); // ...unless it is at the end of a line or is the last one, in which case we make it the background color
- }
- updatePixels(); // Update the pixels array to the screen
+  }
+  updatePixels(); // Update the pixels array to the screen
 
- // legend panel
- textAlign(RIGHT);
- noStroke();
- fill(10,10,10);
- rect(1,0,100,height);
- textSize(15);
- fill(colorGreen);
- text("x", 10, 25);
- fill(colorBlue);
- text("y", 30, 25);
- fill(colorLightBlue);
- text("z", 60, 25);
- text(zHigh, 60, 49);
- text(thirdValuePrint, 50, 80);
+  // legend panel
+  textAlign(RIGHT);
+  noStroke();
+  fill(10,10,10);
+  rect(1,0,120,height);
+  textSize(15);
+  fill(colorGreen);
+  text("x", 10, 25);
+  fill(colorBlue);
+  text("y", 30, 25);
+  fill(colorLightBlue);
+  text("z", 60, 25);
+  text(zHigh, 60, 49);
+  text(thirdValuePrint, 50, 80);
+  // draw switch button
+  fill(colorLightBlue);
+  rect(10, height -10 - 44, 100, 44);
+  fill(#FFFFFF);
+  textAlign(LEFT);
+  text("Live/SD", 20, height - 10 -17);
 }
 
 
