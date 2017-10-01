@@ -5,12 +5,15 @@ int firstValue, secondValue, thirdValue;// fourthValue, fifthValue, ... // add m
 int theSensitivity = 50;
 float zHigh = 0;
 int thirdValuePrint = 0;
+color colorBlue = #2A3AE5;
+color colorLightBlue = #23BFF0;
+color colorGreen = #1AD135;
 
 void setup(){
   size(1000, 500);
   background(#FFFFFF);
   println(Serial.list()); // Prints the list of serial available devices (Arduino should be on top of the list)
-  myPort = new Serial(this, Serial.list()[3], 9600); // Open a new port and connect with Arduino at 9600 baud
+  myPort = new Serial(this, Serial.list()[2], 9600); // Open a new port and connect with Arduino at 9600 baud
 }
 
 void draw(){
@@ -18,28 +21,10 @@ void draw(){
  println(secondValue);
  println(thirdValue);
 
- float firstDrawer = map(firstValue, -theSensitivity,theSensitivity,0,height);
- //invert
- firstDrawer = height - firstDrawer;
- stroke(#1AD135);
- strokeWeight(2);
- point(width/2,firstDrawer);
+ drawDots(firstValue, colorGreen);
+ drawDots(secondValue, colorBlue);
+ drawDots(thirdValue, colorLightBlue);
 
- //mapping
- float secondDrawer = map(secondValue, -theSensitivity,theSensitivity,0,height);
- //invert
- secondDrawer = height - secondDrawer;
- stroke(#2A3AE5);
- strokeWeight(2);
- point(width/2,secondDrawer);
-
- //mapping
- float thirdDrawer = map(thirdValue, -theSensitivity,theSensitivity,0,height);
- //invert
- thirdDrawer = height - thirdDrawer;
- stroke(#23BFF0);
- strokeWeight(2);
- point(width/2,thirdDrawer);
 
  stroke(0,0,0);
  strokeWeight(1);
@@ -96,4 +81,17 @@ void serialEvent(Serial myPort) // Is called everytime there is new data to read
 
     }
   }
+}
+
+void drawDots(int inputValue, color strokeValue) {
+  // mapping
+  float drawer = map(inputValue, -theSensitivity, theSensitivity, 0, height);
+
+  // invert
+  drawer = height - drawer;
+
+  // draw
+  stroke(strokeValue);
+  strokeWeight(2);
+  point(width/2, drawer);
 }
