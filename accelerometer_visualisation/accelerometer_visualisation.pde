@@ -53,15 +53,13 @@ void draw(){
  fill(10,10,10);
  rect(1,0,100,height);
  textSize(15);
- fill(#1AD135);
+ fill(colorGreen);
  text("x", 10, 25);
- fill(#2A3AE5);
+ fill(colorBlue);
  text("y", 30, 25);
- fill(#23BFF0);
+ fill(colorLightBlue);
  text("z", 60, 25);
- fill(#23BFF0);
  text(zHigh, 60, 49);
- fill(#23BFF0);
  text(thirdValuePrint, 50, 80);
 }
 
