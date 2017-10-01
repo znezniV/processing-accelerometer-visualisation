@@ -17,37 +17,38 @@ void setup(){
 }
 
 void draw(){
- println(firstValue);
- println(secondValue);
- println(thirdValue);
+  // print values in console
+  println(firstValue);
+  println(secondValue);
+  println(thirdValue);
 
- drawDots(firstValue, colorGreen);
- drawDots(secondValue, colorBlue);
- drawDots(thirdValue, colorLightBlue);
+  // draw dots on canvas
+  drawDots(firstValue, colorGreen);
+  drawDots(secondValue, colorBlue);
+  drawDots(thirdValue, colorLightBlue);
 
-
- stroke(0,0,0);
- strokeWeight(1);
- point(width/2,height/2);
+  // draw zero line
+  stroke(0,0,0);
+  strokeWeight(1);
+  point(width/2,height/2);
 
  if (thirdValue > zHigh){
    zHigh = thirdValue;
-
  }
 
  if (frameCount%10==0){
    thirdValuePrint = thirdValue;
  }
 
- //scroll effekt
- loadPixels(); //Prepare the pixels array
- for(int i = 0; i < pixels.length; i ++) { //Loop through all of the pixels, position 0 is the top left corner going right and then down
-   if(i % width != 0 && i < pixels.length - 1) pixels[i] = pixels[i + 1]; //Assign each pixel to be the pixel to its right...
-   else pixels[i] = color(#FFFFFF); //...unless it is at the end of a line or is the last one, in which case we make it the background color
+ // scroll effekt
+ loadPixels(); // Prepare the pixels array
+ for(int i = 0; i < pixels.length; i ++) { // Loop through all of the pixels, position 0 is the top left corner going right and then down
+   if(i % width != 0 && i < pixels.length - 1) pixels[i] = pixels[i + 1]; // Assign each pixel to be the pixel to its right...
+   else pixels[i] = color(#FFFFFF); // ...unless it is at the end of a line or is the last one, in which case we make it the background color
  }
- updatePixels(); //Update the pixels array to the screen
+ updatePixels(); // Update the pixels array to the screen
 
- //legend
+ // legend panel
  textAlign(RIGHT);
  noStroke();
  fill(10,10,10);
