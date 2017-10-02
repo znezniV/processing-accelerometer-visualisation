@@ -26,19 +26,27 @@ int thirdValuePrint = 0;
 int colorBlue = 0xff2A3AE5;
 int colorLightBlue = 0xff23BFF0;
 int colorGreen = 0xff1AD135;
+PVector buttonPosition = new PVector(10, 446);
+boolean buttonSwitched = false;
+
+Button switchButton = new Button(buttonPosition, 100);
 
 public void setup(){
   
   background(0xffFFFFFF);
-  println(Serial.list()); // Prints the list of serial available devices (Arduino should be on top of the list)
-  myPort = new Serial(this, Serial.list()[2], 9600); // Open a new port and connect with Arduino at 9600 baud
+
+  // Prints the list of serial available devices (Arduino should be on top of the list)
+  println(Serial.list()); 
+
+  // Open a new port and connect with Arduino at 9600 baud
+  myPort = new Serial(this, Serial.list()[2], 9600);
 }
 
 public void draw(){
   // print values in console
-  println(firstValue);
-  println(secondValue);
-  println(thirdValue);
+  // println(firstValue);
+  // println(secondValue);
+  // println(thirdValue);
 
   // draw dots on canvas
   drawDots(firstValue, colorGreen);
@@ -80,16 +88,14 @@ public void draw(){
   text("z", 60, 25);
   text(zHigh, 60, 49);
   text(thirdValuePrint, 50, 80);
+
   // draw switch button
-  fill(colorLightBlue);
-  rect(10, height -10 - 44, 100, 44);
-  fill(0xffFFFFFF);
-  textAlign(LEFT);
-  text("Live/SD", 20, height - 10 -17);
+  
+  switchButton.draw();
 }
 
-
-public void serialEvent(Serial myPort) // Is called everytime there is new data to read
+// Is called everytime there is new data to read
+public void serialEvent(Serial myPort) 
 {
   if (myPort.available() > 0)
   {
@@ -117,6 +123,44 @@ public void drawDots(int inputValue, int strokeValue) {
   stroke(strokeValue);
   strokeWeight(2);
   point(width/2, drawer);
+}
+
+public void mouseReleased() {
+  if (mouseX >= buttonPosition.x && mouseX <= buttonPosition.x + 100 && mouseY >= buttonPosition.y && mouseY <= buttonPosition.y + 44) {
+    switchButton.isSwitched = !switchButton.isSwitched;
+  }  
+}
+class Button
+{
+  PVector pos;
+  int     w;
+  int     h;
+  String  text;
+  boolean isSwitched;
+  
+  // konstruktor
+  Button(PVector buttonPosition, int buttonWidth) {
+    pos = new PVector(buttonPosition.x, buttonPosition.y);
+    
+    w = buttonWidth;
+    h = 44;
+    text = "Live";
+    isSwitched = false;
+  }
+  
+  // zeichnet den ball
+  public void draw() {
+    fill(colorLightBlue);
+    rect(pos.x, pos.y, w, h);
+    textAlign(LEFT);
+    fill(0xffffffff);
+    if (isSwitched) {
+      text = "SD Card";
+    } else {
+      text = "Live";
+    }
+    text(text, pos.x + 10, pos.y + 44 - 17);
+  }
 }
   public void settings() {  size(1000, 500); }
   static public void main(String[] passedArgs) {

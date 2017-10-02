@@ -12,15 +12,19 @@ color colorGreen = #1AD135;
 void setup(){
   size(1000, 500);
   background(#FFFFFF);
-  println(Serial.list()); // Prints the list of serial available devices (Arduino should be on top of the list)
-  myPort = new Serial(this, Serial.list()[2], 9600); // Open a new port and connect with Arduino at 9600 baud
+
+  // Prints the list of serial available devices (Arduino should be on top of the list)
+  println(Serial.list()); 
+
+  // Open a new port and connect with Arduino at 9600 baud
+  myPort = new Serial(this, Serial.list()[2], 9600);
 }
 
 void draw(){
   // print values in console
-  println(firstValue);
-  println(secondValue);
-  println(thirdValue);
+  // println(firstValue);
+  // println(secondValue);
+  // println(thirdValue);
 
   // draw dots on canvas
   drawDots(firstValue, colorGreen);
@@ -62,16 +66,13 @@ void draw(){
   text("z", 60, 25);
   text(zHigh, 60, 49);
   text(thirdValuePrint, 50, 80);
+
   // draw switch button
-  fill(colorLightBlue);
-  rect(10, height -10 - 44, 100, 44);
-  fill(#FFFFFF);
-  textAlign(LEFT);
-  text("Live/SD", 20, height - 10 -17);
+  switchButton.draw();
 }
 
-
-void serialEvent(Serial myPort) // Is called everytime there is new data to read
+// Is called everytime there is new data to read
+void serialEvent(Serial myPort) 
 {
   if (myPort.available() > 0)
   {
@@ -99,4 +100,10 @@ void drawDots(int inputValue, color strokeValue) {
   stroke(strokeValue);
   strokeWeight(2);
   point(width/2, drawer);
+}
+
+void mouseReleased() {
+  if (mouseX >= buttonPosition.x && mouseX <= buttonPosition.x + 100 && mouseY >= buttonPosition.y && mouseY <= buttonPosition.y + 44) {
+    switchButton.isSwitched = !switchButton.isSwitched;
+  }  
 }
