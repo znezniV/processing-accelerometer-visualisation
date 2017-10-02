@@ -19,15 +19,19 @@ public class accelerometer_visualisation extends PApplet {
   // Import the Processing Serial Library for communicating with arduino
 Serial myPort;               // The used Serial Port
 
-int firstValue, secondValue, thirdValue;// fourthValue, fifthValue, ... // add more if needed
+// int firstValue, secondValue, thirdValue;// fourthValue, fifthValue, ... // add more if needed
+boolean isLiveMode = true;
 int theSensitivity = 50;
+int sdCounter = 0;
 float zHigh = 0;
 int thirdValuePrint = 0;
 int colorBlue = 0xff2A3AE5;
 int colorLightBlue = 0xff23BFF0;
 int colorGreen = 0xff1AD135;
 PVector buttonPosition = new PVector(10, 446);
-boolean buttonSwitched = false;
+String[] lines;
+int[] dataValues = {0, 0, 0};
+int[] colorArray = {colorGreen, colorBlue, colorLightBlue};
 
 Button switchButton = new Button(buttonPosition, 100);
 
@@ -40,30 +44,39 @@ public void setup(){
 
   // Open a new port and connect with Arduino at 9600 baud
   myPort = new Serial(this, Serial.list()[2], 9600);
+
+  // load local data
+  lines = loadStrings("data.txt");
 }
 
 public void draw(){
-  // print values in console
-  // println(firstValue);
-  // println(secondValue);
-  // println(thirdValue);
 
-  // draw dots on canvas
-  drawDots(firstValue, colorGreen);
-  drawDots(secondValue, colorBlue);
-  drawDots(thirdValue, colorLightBlue);
+
+  int loopSize = 3;
+
+  if (isLiveMode) {
+    loopSize = 3;
+  } else {
+    loopSize = 2;
+    loadSDData();
+    
+  }
+
+  for (int i = 0; i < loopSize; i++) {
+    drawDots(dataValues[i], colorArray[i]);
+  }
 
   // draw zero line
   stroke(0,0,0);
   strokeWeight(1);
   point(width/2,height/2);
 
-  if (thirdValue > zHigh){
-   zHigh = thirdValue;
+  if (dataValues[2] > zHigh){
+   zHigh = dataValues[2];
   }
 
   if (frameCount%10==0){
-   thirdValuePrint = thirdValue;
+   thirdValuePrint = dataValues[2];
   }
 
   // scroll effekt
@@ -90,27 +103,35 @@ public void draw(){
   text(thirdValuePrint, 50, 80);
 
   // draw switch button
-  
   switchButton.draw();
 }
 
 // Is called everytime there is new data to read
-public void serialEvent(Serial myPort) 
-{
-  if (myPort.available() > 0)
-  {
+public void serialEvent(Serial myPort) {
+  if (myPort.available() > 0 && isLiveMode) {
     String completeString = myPort.readStringUntil(10); // Read the Serial port until there is a linefeed/carriage return
-    if (completeString != null) // If there is valid data insode the String
-    {
+
+    if (completeString != null) {// If there is valid data insode the String {
       trim(completeString); // Remove whitespace characters at the beginning and end of the string
       String seperateValues[] = split(completeString, ","); // Split the string everytime a delimiter is received
-      firstValue = PApplet.parseInt(seperateValues[0]);
-      secondValue = PApplet.parseInt(seperateValues[1]);
-      thirdValue = PApplet.parseInt(seperateValues[2]);
-
+      dataValues = PApplet.parseInt(seperateValues);
     }
   }
 }
+
+public void loadSDData() {
+  if (sdCounter >= lines.length) {
+    sdCounter = 0;
+  }
+
+  sdCounter++;
+
+  if (lines[sdCounter] != null) {// If there is valid data insode the String {
+    trim(lines[sdCounter]); // Remove whitespace characters at the beginning and end of the string
+    String seperateValues[] = split(lines[sdCounter], ","); // Split the string everytime a delimiter is received
+    dataValues = PApplet.parseInt(seperateValues);
+  }
+} 
 
 public void drawDots(int inputValue, int strokeValue) {
   // mapping
@@ -128,6 +149,7 @@ public void drawDots(int inputValue, int strokeValue) {
 public void mouseReleased() {
   if (mouseX >= buttonPosition.x && mouseX <= buttonPosition.x + 100 && mouseY >= buttonPosition.y && mouseY <= buttonPosition.y + 44) {
     switchButton.isSwitched = !switchButton.isSwitched;
+    isLiveMode = !isLiveMode;
   }  
 }
 class Button
@@ -155,7 +177,7 @@ class Button
     textAlign(LEFT);
     fill(0xffffffff);
     if (isSwitched) {
-      text = "SD Card";
+      text = "Local Data";
     } else {
       text = "Live";
     }

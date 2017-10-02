@@ -6,7 +6,7 @@ class Button
   String  text;
   boolean isSwitched;
   
-  // konstruktor
+  // constructor
   Button(PVector buttonPosition, int buttonWidth) {
     pos = new PVector(buttonPosition.x, buttonPosition.y);
     
@@ -16,14 +16,14 @@ class Button
     isSwitched = false;
   }
   
-  // zeichnet den ball
+  // draws button
   void draw() {
     fill(colorLightBlue);
     rect(pos.x, pos.y, w, h);
     textAlign(LEFT);
     fill(#ffffff);
     if (isSwitched) {
-      text = "SD Card";
+      text = "Local Data";
     } else {
       text = "Live";
     }
