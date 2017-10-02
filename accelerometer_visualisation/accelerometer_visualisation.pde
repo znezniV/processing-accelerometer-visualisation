@@ -8,6 +8,10 @@ int thirdValuePrint = 0;
 color colorBlue = #2A3AE5;
 color colorLightBlue = #23BFF0;
 color colorGreen = #1AD135;
+PVector buttonPosition = new PVector(10, 446);
+boolean buttonSwitched = false;
+
+Button switchButton = new Button(buttonPosition, 100);
 
 void setup(){
   size(1000, 500);
@@ -21,11 +25,7 @@ void setup(){
 }
 
 void draw(){
-  // print values in console
-  // println(firstValue);
-  // println(secondValue);
-  // println(thirdValue);
-
+  
   // draw dots on canvas
   drawDots(firstValue, colorGreen);
   drawDots(secondValue, colorBlue);
@@ -84,7 +84,6 @@ void serialEvent(Serial myPort)
       firstValue = int(seperateValues[0]);
       secondValue = int(seperateValues[1]);
       thirdValue = int(seperateValues[2]);
-
     }
   }
 }
